@@ -14,12 +14,6 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: vanustest
-
----
-apiVersion: v1
 data:
   controller.yaml: |-
     node_id: ${NODE_ID}
@@ -134,7 +128,7 @@ spec:
   # replicas is the number of stores.
   replicas: 3
   # controllerImage is the customized docker image repo of the RocketMQ Controller
-  image: public.ecr.aws/vanus/controller:v0.4.0
+  image: public.ecr.aws/vanus/store:v0.4.0
   # imagePullPolicy is the image pull policy
   imagePullPolicy: IfNotPresent
   serviceAccountName: vanus-operator

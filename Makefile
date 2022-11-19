@@ -166,11 +166,11 @@ deploy: manifests install ## Deploy controller to the K8s cluster specified in ~
 
 .PHONY: undeploy
 undeploy: uninstall ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
-	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/namespace.yaml
 	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/service_account.yaml
 	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/role.yaml
 	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/role_binding.yaml
 	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/operator.yaml
+	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/namespace.yaml
 
 ##@ Build Dependencies
 
