@@ -148,15 +148,24 @@ endif
 
 .PHONY: install
 install: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
-	kubectl create -f config/crd/vanus.linkall.com_controllers.yaml
-	kubectl create -f config/crd/vanus.linkall.com_stores.yaml
+	kubectl create -f config/crd/bases/vanus.linkall.com_controllers.yaml
+	kubectl create -f config/crd/bases/vanus.linkall.com_stores.yaml
 
 .PHONY: deploy
 deploy: manifests install ## Deploy controller to the K8s cluster specified in ~/.kube/config.
+	kubectl create -f deploy/namespace.yaml
 	kubectl create -f deploy/service_account.yaml
 	kubectl create -f deploy/role.yaml
 	kubectl create -f deploy/role_binding.yaml
 	kubectl create -f deploy/operator.yaml
+
+.PHONY: undeploy
+undeploy: uninstall ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
+	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/namespace.yaml
+	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/service_account.yaml
+	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/role.yaml
+	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/role_binding.yaml
+	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/operator.yaml
 
 ##@ Build Dependencies
 
