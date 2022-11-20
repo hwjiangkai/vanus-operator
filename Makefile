@@ -155,7 +155,7 @@ endif
 .PHONY: deploy-sa
 deploy-sa: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
 	echo "==$(NAMESPACE)=="
-	kustomize build deploytest | sed 's@((default))@"$(NAMESPACE)"@' | kubectl apply -f -
+	$(KUSTOMIZE) build deploytest | sed 's@((default))@"$(NAMESPACE)"@' | kubectl apply -f -
 
 .PHONY: install
 install: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
@@ -169,8 +169,8 @@ uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified 
 
 .PHONY: deploy
 deploy: manifests install ## Deploy controller to the K8s cluster specified in ~/.kube/config.
-	kustomize build deploy/namespace | sed 's@((default))@"$(NAMESPACE)"@' | kubectl apply -f -
-	kustomize build deploy | sed 's@((default))@"$(NAMESPACE)"@' | kubectl apply -f -
+	$(KUSTOMIZE) build deploy/namespace | sed 's@((default))@"$(NAMESPACE)"@' | kubectl apply -f -
+	$(KUSTOMIZE) build deploy | sed 's@((default))@"$(NAMESPACE)"@' | kubectl apply -f -
 
 .PHONY: undeploy
 undeploy: uninstall ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
