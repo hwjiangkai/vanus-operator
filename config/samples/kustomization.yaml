@@ -2,4 +2,7 @@
 resources:
 - vanus_v1_controller.yaml
 - vanus_v1_store.yaml
+- vanus_v1_trigger.yaml
+- vanus_v1_timer.yaml
+- vanus_v1_gateway.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples

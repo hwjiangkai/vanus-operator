@@ -238,7 +238,7 @@ func (r *ControllerReconciler) getStatefulSetForController(controller *vanusv1.C
 						Name:      cons.ControllerContainerName,
 						// SecurityContext: getContainerSecurityContext(controller),
 						ImagePullPolicy: controller.Spec.ImagePullPolicy,
-						Env:             getENVForController(controller),
+						Env:             getEnvForController(controller),
 						// TODO(jiangkai): use const
 						Ports: []corev1.ContainerPort{{
 							Name:          "grpc",
@@ -275,7 +275,7 @@ func (r *ControllerReconciler) getStatefulSetForController(controller *vanusv1.C
 	return dep
 }
 
-func getENVForController(controller *vanusv1.Controller) []corev1.EnvVar {
+func getEnvForController(controller *vanusv1.Controller) []corev1.EnvVar {
 	envs := []corev1.EnvVar{{
 		Name:      cons.EnvControllerPodIP,
 		ValueFrom: &corev1.EnvVarSource{FieldRef: &corev1.ObjectFieldSelector{FieldPath: "status.podIP"}},

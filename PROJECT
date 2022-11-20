@@ -25,4 +25,31 @@ resources:
   kind: Store
   path: github.com/linkall-labs/vanus-operator/api/v1
   version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: linkall.com
+  group: vanus
+  kind: Trigger
+  path: github.com/linkall-labs/vanus-operator/api/v1
+  version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: linkall.com
+  group: vanus
+  kind: Timer
+  path: github.com/linkall-labs/vanus-operator/api/v1
+  version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: linkall.com
+  group: vanus
+  kind: Gateway
+  path: github.com/linkall-labs/vanus-operator/api/v1
+  version: v1
 version: "3"

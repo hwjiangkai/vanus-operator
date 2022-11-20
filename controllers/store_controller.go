@@ -195,7 +195,7 @@ func (r *StoreReconciler) getStatefulSetForStore(store *vanusv1.Store) *appsv1.S
 						Name:      cons.StoreContainerName,
 						// SecurityContext: getContainerSecurityContext(store),
 						ImagePullPolicy: store.Spec.ImagePullPolicy,
-						Env:             getENVForStore(store),
+						Env:             getEnvForStore(store),
 						// TODO(jiangkai): use const
 						Ports: []corev1.ContainerPort{{
 							Name:          "grpc",
@@ -223,7 +223,7 @@ func (r *StoreReconciler) getStatefulSetForStore(store *vanusv1.Store) *appsv1.S
 	return dep
 }
 
-func getENVForStore(store *vanusv1.Store) []corev1.EnvVar {
+func getEnvForStore(store *vanusv1.Store) []corev1.EnvVar {
 	envs := []corev1.EnvVar{{
 		Name:      cons.EnvControllerPodIP,
 		ValueFrom: &corev1.EnvVarSource{FieldRef: &corev1.ObjectFieldSelector{FieldPath: "status.podIP"}},

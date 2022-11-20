@@ -46,8 +46,6 @@ ifeq ($(USE_IMAGE_DIGESTS), true)
 	BUNDLE_GEN_FLAGS += --use-image-digests
 endif
 
-# Default namespace
-# NAMESPACE ?= default
 # Image URL to use all building/pushing image targets
 IMG ?= controller:latest
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
@@ -148,14 +146,9 @@ endif
 # undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
 # 	$(KUSTOMIZE) build config/default | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
 
-ifeq ($(origin NAMESPACE), undefined)
-NAMESPACE := default
+ifeq ($(origin VANUS_NAMESPACE), undefined)
+VANUS_NAMESPACE := default
 endif
-
-.PHONY: deploy-sa
-deploy-sa: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
-	echo "==$(NAMESPACE)=="
-	$(KUSTOMIZE) build deploytest | sed 's@((default))@"$(NAMESPACE)"@' | kubectl apply -f -
 
 .PHONY: install
 install: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
@@ -169,15 +162,12 @@ uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified 
 
 .PHONY: deploy
 deploy: manifests install ## Deploy controller to the K8s cluster specified in ~/.kube/config.
-	$(KUSTOMIZE) build deploy/namespace | sed 's@((default))@"$(NAMESPACE)"@' | kubectl apply -f -
-	$(KUSTOMIZE) build deploy | sed 's@((default))@"$(NAMESPACE)"@' | kubectl apply -f -
+	$(KUSTOMIZE) build deploy/namespace | sed 's@default@"$(VANUS_NAMESPACE)"@' | kubectl apply -f -
+	$(KUSTOMIZE) build deploy | sed 's@default@"$(VANUS_NAMESPACE)"@' | kubectl apply -f -
 
 .PHONY: undeploy
 undeploy: uninstall ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
-	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/service_account.yaml -n $(NAMESPACE)
-	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/role.yaml
-	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/role_binding.yaml
-	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/operator.yaml -n $(NAMESPACE)
+	$(KUSTOMIZE) build deploy | sed 's@default@"$(VANUS_NAMESPACE)"@' | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
 
 ##@ Build Dependencies
 

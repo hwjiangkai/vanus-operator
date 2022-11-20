@@ -25,6 +25,15 @@ const (
 	// StoreContainerName is the name of store container
 	StoreContainerName = "store"
 
+	// TriggerContainerName is the name of tigger container
+	TriggerContainerName = "tigger"
+
+	// TimerContainerName is the name of timer container
+	TimerContainerName = "timer"
+
+	// GatewayContainerName is the name of gateway container
+	GatewayContainerName = "gateway"
+
 	// BasicCommand is basic command of exec function
 	BasicCommand = "sh"
 
