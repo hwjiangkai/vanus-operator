@@ -178,7 +178,6 @@ undeploy: uninstall ## Undeploy controller from the K8s cluster specified in ~/.
 	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/role.yaml
 	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/role_binding.yaml
 	kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/operator.yaml -n $(NAMESPACE)
-	# kubectl delete --ignore-not-found=$(ignore-not-found) -f deploy/namespace.yaml
 
 ##@ Build Dependencies
 
