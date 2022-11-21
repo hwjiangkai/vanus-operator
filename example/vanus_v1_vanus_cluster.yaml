@@ -46,7 +46,6 @@ data:
 kind: ConfigMap
 metadata:
   name: config-controller
-  namespace: default
 
 ---
 apiVersion: v1
@@ -77,7 +76,6 @@ data:
 kind: ConfigMap
 metadata:
   name: config-store
-  namespace: default
 
 ---
 apiVersion: v1
@@ -92,7 +90,6 @@ data:
 kind: ConfigMap
 metadata:
   name: config-trigger
-  namespace: default
 
 ---
 apiVersion: v1
@@ -119,7 +116,6 @@ data:
 kind: ConfigMap
 metadata:
   name: config-timer
-  namespace: default
 
 ---
 apiVersion: v1
@@ -133,14 +129,12 @@ data:
 kind: ConfigMap
 metadata:
   name: config-gateway
-  namespace: default
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: vanus-controller
-  namespace: default
 spec:
   clusterIP: None
   ports:
@@ -154,19 +148,18 @@ apiVersion: v1
 kind: Service
 metadata:
   name: vanus-gateway
-  namespace: default
 spec:
   ports:
   - name: put
-    nodePort: 30001
+    nodePort: 30011
     port: 8080
     targetPort: 8080
   - name: get
-    nodePort: 30002
+    nodePort: 30012
     port: 8081
     targetPort: 8081
   - name: ctrl-proxy
-    nodePort: 30003
+    nodePort: 30013
     port: 8082
     targetPort: 8082
   selector:
@@ -179,7 +172,6 @@ kind: Controller
 metadata:
   # name of controller cluster
   name: vanus-controller
-  namespace: default
 spec:
   # replicas is the number of controllers.
   replicas: 3
@@ -203,7 +195,6 @@ kind: Store
 metadata:
   # name of store cluster
   name: vanus-store
-  namespace: default
 spec:
   # replicas is the number of stores.
   replicas: 3
@@ -219,7 +210,6 @@ kind: Trigger
 metadata:
   # name of store cluster
   name: vanus-trigger
-  namespace: default
 spec:
   # controllerImage is the customized docker image repo of the RocketMQ Controller
   image: public.ecr.aws/vanus/trigger:v0.4.0
@@ -233,7 +223,6 @@ kind: Timer
 metadata:
   # name of store cluster
   name: vanus-timer
-  namespace: default
 spec:
   # controllerImage is the customized docker image repo of the RocketMQ Controller
   image: public.ecr.aws/vanus/timer:v0.4.0
@@ -247,7 +236,6 @@ kind: Trigger
 metadata:
   # name of store cluster
   name: vanus-gateway
-  namespace: default
 spec:
   # controllerImage is the customized docker image repo of the RocketMQ Controller
   image: public.ecr.aws/vanus/gateway:v0.4.0

@@ -161,7 +161,7 @@ func (r *TimerReconciler) getDeploymentForTimer(timer *vanusv1.Timer) *appsv1.De
 						}},
 						VolumeMounts: []corev1.VolumeMount{{
 							MountPath: cons.ConfigMountPath,
-							Name:      "config-trigger",
+							Name:      "config-timer",
 						}},
 					}},
 					Volumes: getVolumesForTimer(timer),
@@ -197,11 +197,11 @@ func getEnvForTimer(timer *vanusv1.Timer) []corev1.EnvVar {
 
 func getVolumesForTimer(timer *vanusv1.Timer) []corev1.Volume {
 	volumes := []corev1.Volume{{
-		Name: "config-trigger",
+		Name: "config-timer",
 		VolumeSource: corev1.VolumeSource{
 			ConfigMap: &corev1.ConfigMapVolumeSource{
 				LocalObjectReference: corev1.LocalObjectReference{
-					Name: "config-trigger",
+					Name: "config-timer",
 				},
 			}},
 	}}

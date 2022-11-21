@@ -161,7 +161,7 @@ func (r *GatewayReconciler) getDeploymentForGateway(gateway *vanusv1.Gateway) *a
 						}},
 						VolumeMounts: []corev1.VolumeMount{{
 							MountPath: cons.ConfigMountPath,
-							Name:      "config-trigger",
+							Name:      "config-gateway",
 						}},
 					}},
 					Volumes: getVolumesForGateway(gateway),
@@ -197,11 +197,11 @@ func getEnvForGateway(gateway *vanusv1.Gateway) []corev1.EnvVar {
 
 func getVolumesForGateway(gateway *vanusv1.Gateway) []corev1.Volume {
 	volumes := []corev1.Volume{{
-		Name: "config-trigger",
+		Name: "config-gateway",
 		VolumeSource: corev1.VolumeSource{
 			ConfigMap: &corev1.ConfigMapVolumeSource{
 				LocalObjectReference: corev1.LocalObjectReference{
-					Name: "config-trigger",
+					Name: "config-gateway",
 				},
 			}},
 	}}
