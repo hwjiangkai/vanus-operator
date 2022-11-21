@@ -44,7 +44,7 @@ type StoreSpec struct {
 	// List of Secret resource containing access credentials to the registry for the Controller image. Required if the docker registry is private.
 	// ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
 	// The desired compute resource requirements of Pods in the cluster.
-	// +kubebuilder:default:={limits: {cpu: "2000m", memory: "2Gi"}, requests: {cpu: "1000m", memory: "2Gi"}}
+	// +kubebuilder:default:={limits: {cpu: "500m", memory: "1024Mi"}, requests: {cpu: "250m", memory: "512Mi"}}
 	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
 	// StorageMode can be EmptyDir, HostPath, StorageClass
 	// StorageMode string `json:"storageMode"`

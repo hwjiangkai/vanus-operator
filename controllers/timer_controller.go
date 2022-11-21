@@ -62,8 +62,8 @@ func (r *TimerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
-	logger := log.Log.WithName("Trigger")
-	logger.Info("Reconciling Trigger.")
+	logger := log.Log.WithName("Timer")
+	logger.Info("Reconciling Timer.")
 
 	// Fetch the Controller instance
 	timer := &vanusv1.Timer{}
@@ -81,19 +81,19 @@ func (r *TimerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 		return reconcile.Result{RequeueAfter: time.Duration(cons.RequeueIntervalInSecond) * time.Second}, err
 	}
 
-	triggerDeployment := r.getDeploymentForTimer(timer)
+	timerDeployment := r.getDeploymentForTimer(timer)
 
 	// Set Console instance as the owner and controller
-	if err := controllerutil.SetControllerReference(timer, triggerDeployment, r.Scheme); err != nil {
+	if err := controllerutil.SetControllerReference(timer, timerDeployment, r.Scheme); err != nil {
 		return reconcile.Result{}, err
 	}
 
 	// Check if this Pod already exists
 	found := &appsv1.Deployment{}
-	err = r.Get(context.TODO(), types.NamespacedName{Name: triggerDeployment.Name, Namespace: triggerDeployment.Namespace}, found)
+	err = r.Get(context.TODO(), types.NamespacedName{Name: timerDeployment.Name, Namespace: timerDeployment.Namespace}, found)
 	if err != nil && errors.IsNotFound(err) {
-		logger.Info("Creating Vanus Trigger Deployment", "Namespace", triggerDeployment, "Name", triggerDeployment.Name)
-		err = r.Create(context.TODO(), triggerDeployment)
+		logger.Info("Creating Vanus Timer Deployment", "Namespace", timerDeployment, "Name", timerDeployment.Name)
+		err = r.Create(context.TODO(), timerDeployment)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
@@ -118,7 +118,7 @@ func (r *TimerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	// TODO: update console if name server address changes
 
 	// CR already exists - don't requeue
-	logger.Info("Skip reconcile: Vanus Trigger Deployment already exists", "Namespace", found.Namespace, "Name", found.Name)
+	logger.Info("Skip reconcile: Vanus Timer Deployment already exists", "Namespace", found.Namespace, "Name", found.Name)
 	return ctrl.Result{}, nil
 }
 
@@ -152,7 +152,7 @@ func (r *TimerReconciler) getDeploymentForTimer(timer *vanusv1.Timer) *appsv1.De
 					Containers: []corev1.Container{{
 						Resources:       timer.Spec.Resources,
 						Image:           timer.Spec.Image,
-						Name:            cons.TriggerContainerName,
+						Name:            cons.TimerContainerName,
 						ImagePullPolicy: timer.Spec.ImagePullPolicy,
 						Env:             getEnvForTimer(timer),
 						Ports: []corev1.ContainerPort{{

@@ -62,8 +62,8 @@ func (r *GatewayReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
-	logger := log.Log.WithName("Trigger")
-	logger.Info("Reconciling Trigger.")
+	logger := log.Log.WithName("Gateway")
+	logger.Info("Reconciling Gateway.")
 
 	// Fetch the Controller instance
 	gateway := &vanusv1.Gateway{}
@@ -81,19 +81,19 @@ func (r *GatewayReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		return reconcile.Result{RequeueAfter: time.Duration(cons.RequeueIntervalInSecond) * time.Second}, err
 	}
 
-	triggerDeployment := r.getDeploymentForGateway(gateway)
+	gatewayDeployment := r.getDeploymentForGateway(gateway)
 
 	// Set Console instance as the owner and controller
-	if err := controllerutil.SetControllerReference(gateway, triggerDeployment, r.Scheme); err != nil {
+	if err := controllerutil.SetControllerReference(gateway, gatewayDeployment, r.Scheme); err != nil {
 		return reconcile.Result{}, err
 	}
 
 	// Check if this Pod already exists
 	found := &appsv1.Deployment{}
-	err = r.Get(context.TODO(), types.NamespacedName{Name: triggerDeployment.Name, Namespace: triggerDeployment.Namespace}, found)
+	err = r.Get(context.TODO(), types.NamespacedName{Name: gatewayDeployment.Name, Namespace: gatewayDeployment.Namespace}, found)
 	if err != nil && errors.IsNotFound(err) {
-		logger.Info("Creating Vanus Trigger Deployment", "Namespace", triggerDeployment, "Name", triggerDeployment.Name)
-		err = r.Create(context.TODO(), triggerDeployment)
+		logger.Info("Creating Vanus Gateway Deployment", "Namespace", gatewayDeployment, "Name", gatewayDeployment.Name)
+		err = r.Create(context.TODO(), gatewayDeployment)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
@@ -118,7 +118,7 @@ func (r *GatewayReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	// TODO: update console if name server address changes
 
 	// CR already exists - don't requeue
-	logger.Info("Skip reconcile: Vanus Trigger Deployment already exists", "Namespace", found.Namespace, "Name", found.Name)
+	logger.Info("Skip reconcile: Vanus Gateway Deployment already exists", "Namespace", found.Namespace, "Name", found.Name)
 	return ctrl.Result{}, nil
 }
 
@@ -152,7 +152,7 @@ func (r *GatewayReconciler) getDeploymentForGateway(gateway *vanusv1.Gateway) *a
 					Containers: []corev1.Container{{
 						Resources:       gateway.Spec.Resources,
 						Image:           gateway.Spec.Image,
-						Name:            cons.TriggerContainerName,
+						Name:            cons.GatewayContainerName,
 						ImagePullPolicy: gateway.Spec.ImagePullPolicy,
 						Env:             getEnvForGateway(gateway),
 						Ports: []corev1.ContainerPort{{
